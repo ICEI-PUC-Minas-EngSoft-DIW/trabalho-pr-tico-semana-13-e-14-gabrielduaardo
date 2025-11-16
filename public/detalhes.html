@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Item | City Tourism</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Remova ou substitua 'style.css' pelo seu arquivo de estilos real -->
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .img-atracao {
+            height: 200px;
+            object-fit: cover;
+        }
+        .btn-registrar {
+            background-color: #28a745;
+            color: white;
+            border: none;
+        }
+        .site-footer {
+            background-color: #343a40;
+            color: #ccc;
+        }
+        .logo-img {
+            height: 40px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Navegação principal">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <img src="assets/img/logo.png" alt="logo City Tourism" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/40x40/000/fff?text=CT'">
+                City Tourism
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNav"
+                aria-controls="menuNav" aria-expanded="false" aria-label="Alternar menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menuNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="#">Cidades</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Eventos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Login</a></li>
+                </ul>
+                <a href="formulario.html" class="btn btn-registrar ms-lg-3 mt-3 mt-lg-0">Adicionar Lugar</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        
+        <!-- Botões de Ação para o Item Principal (Edição e Exclusão) -->
+        <div class="d-flex justify-content-end gap-2 mb-4">
+            <!-- Este botão de edição levaria para uma página de formulário com o ID preenchido -->
+            <button id="btn-editar-lugar" class="btn btn-warning d-none"><i class="fas fa-edit me-2"></i>Editar Lugar</button>
+            <button id="btn-excluir-lugar" class="btn btn-danger d-none" data-bs-toggle="modal" data-bs-target="#modalExclusaoLugar"><i class="fas fa-trash me-2"></i>Excluir Lugar</button>
+        </div>
+
+        <!-- Onde o conteúdo do lugar (GET) será carregado -->
+        <div id="detalhe-item" class="row justify-content-center">
+            <!-- Conteúdo injetado pelo app.js -->
+        </div>
+
+        <!-- Seção de Gerenciamento de Atrações -->
+        <section class="mt-5 pt-5 border-top">
+             <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="titulo-secao">Gerenciamento de Pontos Turísticos</h2>
+                <!-- Botão para abrir o Modal de Criação de nova atração (POST) -->
+                <button id="btn-adicionar-atracao" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAtracaoForm"><i class="fas fa-plus me-2"></i>Adicionar Atração</button>
+            </div>
+            
+            <!-- Onde a lista de atrações será renderizada -->
+            <div id="lista-atracoes" class="row row-cols-1 row-cols-md-3 g-4">
+                <!-- Atrações injetadas pelo app.js -->
+            </div>
+        </section>
+        
+        <div class="text-center mt-5">
+            <a href="index.html" class="btn btn-secondary">← Voltar para a Lista</a>
+        </div>
+    </main>
+
+    <footer class="site-footer py-4 bg-dark text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <h5 class="titulo-secao text-white">Informações do(a) Aluno(a)</h5>
+                    <p class="mb-0">Este projeto foi desenvolvido como parte da disciplina de DIW.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5 class="titulo-secao text-white">Autoria</h5>
+                    <p class="mb-1"><strong>Nome:</strong> Gabriel Martins</p>
+                    <p class="mb-1"><strong>Curso:</strong> Desenvolvimento de Soluções Web</p>
+                    <p class="mb-2"><strong>Instituição:</strong> PucMinas</p>
+                    <div class="redes-sociais">
+                        <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3 border-light">
+            <p class="text-center mb-0 text-muted small">© 2025 City Tourism | Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+
+    <!-- ========================================================= -->
+    <!-- MODAIS NECESSÁRIOS PARA O CRUD -->
+    <!-- ========================================================= -->
+
+    <!-- Modal de Confirmação de Exclusão do Lugar Principal -->
+    <div class="modal fade" id="modalExclusaoLugar" tabindex="-1" aria-labelledby="modalExclusaoLugarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalExclusaoLugarLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza de que deseja excluir permanentemente o lugar <strong id="lugar-nome-excluir"></strong> e todos os seus dados? Esta ação é irreversível.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmar-exclusao-lugar">Excluir Permanentemente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal/Formulário para Criar/Editar Atração (POST/PUT) -->
+    <div class="modal fade" id="modalAtracaoForm" tabindex="-1" aria-labelledby="modalAtracaoFormLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="form-atracao" onsubmit="return false;">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="modalAtracaoFormLabel">Adicionar Nova Atração</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Campo escondido para saber se é edição (PUT) ou criação (POST) -->
+                        <input type="hidden" id="atracao-id" value=""> 
+                        
+                        <div class="mb-3">
+                            <label for="atracao-nome" class="form-label">Nome da Atração</label>
+                            <input type="text" class="form-control" id="atracao-nome" required minlength="3">
+                            <div class="invalid-feedback">O nome da atração é obrigatório e deve ter no mínimo 3 caracteres.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="atracao-descricao" class="form-label">Descrição Breve</label>
+                            <textarea class="form-control" id="atracao-descricao" rows="2" required></textarea>
+                            <div class="invalid-feedback">A descrição é obrigatória.</div>
+                        </div>
+
+                        <!-- NOVO CAMPO DE UPLOAD DE IMAGEM -->
+                        <div class="mb-3">
+                            <label for="atracao-imagem-file" class="form-label">Imagem da Atração (PNG/JPG)</label>
+                            <input type="file" class="form-control" id="atracao-imagem-file" accept="image/png, image/jpeg">
+                            <small class="form-text text-muted">A imagem será salva como Base64 no JSON (para simulação).</small>
+                        </div>
+                        <div class="mb-3">
+                            <!-- Pré-visualização e campo escondido para o Base64/URL -->
+                            <label class="form-label">Pré-visualização</label>
+                            <img id="atracao-imagem-preview" src="https://placehold.co/150x100/ccc/333?text=Preview" class="img-fluid rounded border d-block mb-2" style="max-height: 150px; object-fit: cover;">
+                            <input type="hidden" id="atracao-imagem-data" value="">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btn-salvar-atracao">Salvar Atração</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script> 
+</body>
+
+</html>
