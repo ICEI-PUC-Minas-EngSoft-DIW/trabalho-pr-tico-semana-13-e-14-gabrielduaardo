@@ -520,3 +520,167 @@ window.addEventListener('load', () => {
         init();
     }
 });
+
+// app.js — Gerencia popup e eventos (localStorage)
+
+document.addEventListener("DOMContentLoaded", () => {
+  // --- Elementos possíveis (suporta variações) ---
+  const btnAbrir = document.getElementById("btnAbrirPopup") || document.querySelector(".btn-add-evento") || null;
+  const btnFechar = document.getElementById("btnFecharPopup") || null;
+  const popup = document.getElementById("popupEvento");
+  const btnSalvar = document.getElementById("btnSalvarEvento") || null;
+  const listaEventosEl = document.getElementById("listaEventos");
+
+  // Inputs do formulário
+  const inputTitulo = document.getElementById("eventoTitulo");
+  const inputCidade = document.getElementById("eventoCidade");
+  const inputData = document.getElementById("eventoData");
+  const inputResumo = document.getElementById("eventoDescricaoCurta") || document.getElementById("eventoDescricao");
+  const inputDescricao = document.getElementById("eventoDescricao") || document.getElementById("eventoDescricaoLonga");
+
+  // -- Helpers --
+  function log(...args){ console.log("[app.js]", ...args); }
+
+  function abrirPopup() {
+    if (!popup) { console.warn("Popup não encontrado no DOM"); return; }
+    popup.style.display = "flex";
+    // opcional: focar no título
+    if (inputTitulo) inputTitulo.focus();
+  }
+
+  function fecharPopup() {
+    if (!popup) return;
+    popup.style.display = "none";
+    // limpa campos (opcional)
+    // limparFormulario();
+  }
+
+  function limparFormulario() {
+    if (inputTitulo) inputTitulo.value = "";
+    if (inputCidade) inputCidade.value = "";
+    if (inputData) inputData.value = "";
+    if (inputResumo) inputResumo.value = "";
+    if (inputDescricao) inputDescricao.value = "";
+  }
+
+  function validarFormulario() {
+    if (!inputTitulo || !inputCidade || !inputData || !inputResumo) {
+      alert("Campos obrigatórios faltando (título, cidade, data, resumo).");
+      return false;
+    }
+    if (!inputTitulo.value.trim()) { alert("Preencha o título."); return false; }
+    if (!inputCidade.value.trim()) { alert("Preencha o ID da cidade."); return false; }
+    if (!inputData.value) { alert("Selecione a data."); return false; }
+    if (!inputResumo.value.trim()) { alert("Preencha o resumo."); return false; }
+    return true;
+  }
+
+  function salvarEventoLocal(eventoObj) {
+    const eventos = JSON.parse(localStorage.getItem("eventos")) || [];
+    eventos.push(eventoObj);
+    localStorage.setItem("eventos", JSON.stringify(eventos));
+  }
+
+  // RENDERIZAÇÃO
+  function carregarEventos() {
+    if (!listaEventosEl) {
+      log("Elemento #listaEventos não encontrado — nada a renderizar.");
+      return;
+    }
+
+    const eventos = JSON.parse(localStorage.getItem("eventos")) || [];
+    listaEventosEl.innerHTML = "";
+
+    if (eventos.length === 0) {
+      listaEventosEl.innerHTML = `<p class="text-center mt-4 text-muted">Nenhum evento cadastrado ainda.</p>`;
+      return;
+    }
+
+    // criar cards
+    eventos.forEach(ev => {
+      const a = document.createElement("a");
+      a.href = `evento.html?id=${ev.id}`;
+      a.className = "text-decoration-none text-dark d-block";
+
+      const card = document.createElement("div");
+      card.className = "card mb-3 p-3 shadow-sm";
+
+      const title = document.createElement("h4");
+      title.textContent = ev.titulo;
+
+      const meta = document.createElement("p");
+      meta.innerHTML = `<strong>Data:</strong> ${ev.data} — <strong>Cidade ID:</strong> ${ev.cidade_id}`;
+
+      const resumo = document.createElement("p");
+      resumo.textContent = ev.descricao_curta || "";
+
+      card.appendChild(title);
+      card.appendChild(meta);
+      card.appendChild(resumo);
+      a.appendChild(card);
+      listaEventosEl.appendChild(a);
+    });
+  }
+
+  // --- Event handlers ---
+  if (btnAbrir) {
+    btnAbrir.addEventListener("click", (e) => {
+      e.preventDefault();
+      abrirPopup();
+    });
+  } else {
+    log("Botão de abrir popup (#btnAbrirPopup ou .btn-add-evento) não encontrado.");
+  }
+
+  if (btnFechar) {
+    btnFechar.addEventListener("click", (e) => {
+      e.preventDefault();
+      fecharPopup();
+    });
+  } else {
+    // pode haver botão inside popup sem id — tenta delegar por classe .btn-close
+    const btnCloseAlt = popup ? popup.querySelector(".btn-close") : null;
+    if (btnCloseAlt) btnCloseAlt.addEventListener("click", (e) => { e.preventDefault(); fecharPopup(); });
+  }
+
+  if (btnSalvar) {
+    btnSalvar.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      if (!validarFormulario()) return;
+
+      const novoEvento = {
+        id: Date.now(),
+        titulo: inputTitulo ? inputTitulo.value.trim() : "Sem título",
+        cidade_id: inputCidade ? inputCidade.value.trim() : "",
+        data: inputData ? inputData.value : "",
+        descricao_curta: inputResumo ? inputResumo.value.trim() : "",
+        descricao: inputDescricao ? inputDescricao.value.trim() : ""
+      };
+
+      salvarEventoLocal(novoEvento);
+      log("Evento salvo:", novoEvento);
+      limparFormulario();
+      fecharPopup();
+      carregarEventos();
+    });
+  } else {
+    // também aceita botão com onclick inline (caso exista)
+    const btnSalvarAlt = document.getElementById("btnSalvar") || document.querySelector("[data-action='salvar-evento']");
+    if (btnSalvarAlt) {
+      btnSalvarAlt.addEventListener("click", (e) => { e.preventDefault(); /* delega ao mesmo fluxo acima */ if (typeof btnSalvar !== "undefined") btnSalvar.click(); });
+    } else {
+      log("Botão de salvar evento não encontrado (id=btnSalvarEvento).");
+    }
+  }
+
+  // Fechar popup ao clicar fora do conteúdo
+  if (popup) {
+    popup.addEventListener("click", (e) => {
+      if (e.target === popup) fecharPopup();
+    });
+  }
+
+  // carrega a lista inicial
+  carregarEventos();
+});

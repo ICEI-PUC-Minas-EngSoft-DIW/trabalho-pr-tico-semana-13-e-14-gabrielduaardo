@@ -7,17 +7,21 @@ Com base nos tipos de projetos escohidos, você deve propor **visualizações qu
 
 Sugerimos o uso das seguintes ferramentas acessíveis: [FullCalendar](https://fullcalendar.io/), [Chart.js](https://www.chartjs.org/), [Mapbox](https://docs.mapbox.com/api/), para citar algumas.
 
+
+
 ## Informações do trabalho
 
-- Nome:
+- Nome: Gabriel Eduardo de Oliveira Martins
 - Matricula:
-- Proposta de projeto escolhida:
-- Breve descrição sobre seu projeto:
+- Proposta de projeto escolhida: A proposta que escolhi é criar um site para mostrar um pouco das cidades mineiras, e sugerir locais como parques, museus e teatros para que a populção possa conhecer.
+- Breve descrição sobre seu projeto: A ideia do meu projeto é de criar um site onde a população mineira possa conhecer mais sobre o Estado, conhecer novas cidades, museus, teatros, parques, e possa ser avisada onde vai ver eventos. 
 
 **Print da tela com a implementação**
 
-<< Coloque aqui uma breve explicação da implementação feita nessa etapa>>
+Foi adicionada uma função de cadastrar evento, e ver masi detalhes sobre  o mesmo.
 
-<<  COLOQUE A IMAGEM TELA 1 AQUI >>
+ ![HomePage1](public/assets/img/atracao/image1.png)
+  ![HomePage2](public/assets/img/atracao/image2.png)
+  ![HomePage3](public/assets/img/atracao/image3.png)
 
 <<  COLOQUE A IMAGEM TELA 2 AQUI >>
